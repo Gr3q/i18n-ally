@@ -27,13 +27,23 @@ export class Log {
 
   static async error(err: Error | string | any = {}, prompt = true, indent = 0) {
     if (typeof err !== 'string') {
-      const messages = [
+      const message_items: string[] = [
         err.message,
-        err.response?.data,
-        err.stack,
-        err.toJSON?.(),
       ]
-        .filter(Boolean).join('\n')
+
+      try {
+        message_items.push(JSON.stringify(err.response?.data))
+      }
+      catch (e) {}
+
+      message_items.push(err.stack)
+
+      try {
+        message_items.push(JSON.stringify(err))
+      }
+      catch (e) {}
+
+      const messages = message_items.filter(Boolean).join('\n')
       Log.info(`🐛 ERROR: ${err.name}: ${messages}`, indent)
     }
 
@@ -41,7 +51,7 @@ export class Log {
       const openOutputButton = i18n.t('prompt.show_error_log')
       const message = typeof err === 'string'
         ? err
-        : `${EXT_NAME} Error: ${err.toString()}`
+        : `${EXT_NAME} Error: ${JSON.stringify(err)}`
 
       const result = await window.showErrorMessage(message, openOutputButton)
       if (result === openOutputButton)
