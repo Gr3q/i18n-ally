@@ -1,3 +1,10 @@
+```
+set -x NODE_OPTIONS "--openssl-legacy-provider"
+npm run build
+npx vsce package -o dist/i18n-ally-Gr3q.vsix
+```
+
+
 <p align="center">
 <img src="https://github.com/lokalise/i18n-ally/blob/main/screenshots/full-logo-new.png?raw=true" alt="logo" width="450"/>
 </p>
